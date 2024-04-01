@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="./output.css" rel="stylesheet">
+    <style>
+        .shadowBox {
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+        }
+        .msgShadowBox{
+            box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+        }
+        .msgBox{
+            text-wrap: wrap;
+            background-color: #ffb7ff;
+            color: #826AED;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 0.5rem;
+            font-weight: 500;
+        }
+    </style>
+    <title>Chat APP</title>
+</head>
+
+<body class="h-[100vh] w-full bg-[#826AED] flex justify-center items-center">
+    <main class="h-[80%] w-[40%] flex justify-center items-center flex-col rounded-2xl bg-[#C879FF] shadowBox">
+        <h1 class="text-4xl font-bold m-4 text-[#CAFF8A]">Chat Room</h1>
+
+        <div id="messages" class="flex flex-col overflow-auto scroll-smooth">
+        </div>
+
+        <div class="m-4 msgSend flex justify-center items-center gap-2">
+            <input class="p-4 rounded-2xl" type="text" id="message" placeholder="Enter Message...." />
+            <button id="sendBtn">
+                <img class=" h-12 w-12 shadowBox bg-transparent rounded-2xl" src="https://img.icons8.com/pulsar-color/48/filled-sent.png" alt="" />
+            </button>
+        </div>
+
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const sendBtn = document.getElementById("sendBtn");
+        const messageInput = document.getElementById("message");
+        const allMessages = document.getElementById("messages");
+
+        socket.on("message", (message) => {
+            const msgbox = document.createElement("div");
+            msgbox.innerText = message;
+            msgbox.classList.add("msgShadowBox","msgBox")
+            allMessages.appendChild(msgbox);
+        });
+
+        sendBtn.addEventListener("click", (e) => {
+            const message = messageInput.value;
+            console.log(message);
+            socket.emit("user-message", message);
+        });
+    </script>
+</body>
+
+</html>
